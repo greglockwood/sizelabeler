@@ -4,7 +4,8 @@ module.exports = ({ config, existingLabels, additions, deletions, logger }) => {
   const labelsToRemove = new Set();
 
   const netSize = additions - deletions;
-  log(`Additions: ${additions}, Deletions: ${deletions}, Net Size: ${netSize}`);
+  const totalSize = additions + deletions;
+  log(`Additions: ${additions}, Deletions: ${deletions}`);
 
   // eslint-disable-next-line guard-for-in
   for (const label in config) {
@@ -19,6 +20,9 @@ module.exports = ({ config, existingLabels, additions, deletions, logger }) => {
       if ('min_deletions' in rule) {
         rulePasses = rulePasses && deletions >= rule.min_deletions;
       }
+      if ('min_total' in rule) {
+        rulePasses = rulePasses && totalSize >= rule.min_total;
+      }
       if ('min' in rule) {
         rulePasses = rulePasses && netSize >= rule.min;
       }
@@ -27,6 +31,9 @@ module.exports = ({ config, existingLabels, additions, deletions, logger }) => {
       }
       if ('max_deletions' in rule) {
         rulePasses = rulePasses && deletions <= rule.max_deletions;
+      }
+      if ('max_total' in rule) {
+        rulePasses = rulePasses && totalSize <= rule.max_total;
       }
       if ('max' in rule) {
         rulePasses = rulePasses && netSize <= rule.max;
