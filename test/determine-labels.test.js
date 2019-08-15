@@ -114,6 +114,42 @@ describe('determineLabels()', () => {
     expect(labelsToAdd).toEqual(['sm']);
   });
 
+  test('min_total', () => {
+    const { labelsToAdd } = determineLabels({
+      ...defaultParams(),
+      config: {
+        xs: {
+          max_total: 10,
+        },
+        sm: {
+          min_total: 11,
+        },
+      },
+      additions: 5,
+      deletions: 7,
+    });
+
+    expect(labelsToAdd).toEqual(['sm']);
+  });
+
+  test('max_total', () => {
+    const { labelsToAdd } = determineLabels({
+      ...defaultParams(),
+      config: {
+        xs: {
+          max_total: 10,
+        },
+        sm: {
+          min_total: 11,
+        },
+      },
+      additions: 5,
+      deletions: 5,
+    });
+
+    expect(labelsToAdd).toEqual(['xs']);
+  });
+
   test('labelsToRemove', () => {
     const { labelsToRemove } = determineLabels({
       ...defaultParams(),
