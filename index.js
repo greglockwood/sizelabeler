@@ -1,5 +1,6 @@
 const yaml = require('js-yaml');
 const determineLabels = require('./src/determine-labels');
+const mergeLabels = require('./src/merge-labels');
 
 module.exports = robot => {
   robot.on('pull_request.opened', sizelabel);
@@ -31,18 +32,18 @@ module.exports = robot => {
       logger: (...args) => robot.log(...args),
     });
 
-    if (labelsToRemove.length > 0) {
-      robot.log('Removing labels', labelsToRemove);
-      await context.github.issues.removeLabels(context.repo({
+    const { hasChanges, finalLabelsList } = mergeLabels({
+      existingLabels,
+      labelsToAdd,
+      labelsToRemove,
+      robot,
+    });
+
+    if (hasChanges) {
+      // only send the request if we need to
+      await context.github.issues.replaceLabels(context.repo({
         issue_number,
-        labels: labelsToRemove,
-      }));
-    }
-    if (labelsToAdd.length > 0) {
-      robot.log('Adding labels', labelsToAdd);
-      await context.github.issues.addLabels(context.repo({
-        issue_number,
-        labels: labelsToAdd,
+        labels: Array.from(finalLabelsList),
       }));
     }
   }
