@@ -228,4 +228,15 @@ describe('determineLabels()', () => {
     }).labelsToAdd).toEqual(['xs', 'sm']);
   });
 
+  test('does not remove existing labels not in the config', () => {
+    const { labelsToRemove } = determineLabels({
+      ...defaultParams(),
+      existingLabels: new Set(['xs', 'other-label']),
+      additions: 0,
+      deletions: 0,
+    });
+
+    expect(labelsToRemove).toEqual(['xs']);
+  });
+
 });
