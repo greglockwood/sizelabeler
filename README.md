@@ -45,6 +45,8 @@ For each label, the following properties are supported:
 * `min_deletions`: (number) the minimum value for the number of lines removed in the PR.
 * `max_deletions`: (number) the maximum value for the number of lines removed in the PR.
 * `terminal`: (boolean) specify as `true` to prevent processing any further labels.
+* `or`: (nested list) specify multiple conditions under which the label should be applied.
+* `actions`: (array) an array of actions, which can be `opened`, `reopened` or `synchronize`, to evaluate the other conditions of the label. If not specified, any action will do so.
 
 ##### Issues with Bot
 

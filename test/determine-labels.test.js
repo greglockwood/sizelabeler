@@ -12,6 +12,7 @@ describe('determineLabels()', () => {
           min_additions: 1,
         }
       },
+      action: 'opened',
       additions: 0,
       deletions: 0,
       existingLabels: new Set(),
@@ -238,5 +239,37 @@ describe('determineLabels()', () => {
 
     expect(labelsToRemove).toEqual(['xs']);
   });
+
+  test('does not apply label if action does not match actions list when defined', () => {
+    const { labelsToAdd } = determineLabels({
+      ...defaultParams(),
+      config: {
+        shouldNotBeAdded: {
+          actions: ['reopened'],
+          min: 0,
+        },
+      },
+      action: 'opened',
+    });
+
+    expect(labelsToAdd).toHaveLength(0);
+  });
+
+  test('applies label if action does match actions list when defined', () => {
+    const { labelsToAdd } = determineLabels({
+      ...defaultParams(),
+      config: {
+        shouldBeAdded: {
+          actions: ['opened'],
+          min: 0,
+        },
+      },
+      action: 'opened',
+    });
+
+    expect(labelsToAdd).toEqual(['shouldBeAdded']);
+  });
+
+
 
 });

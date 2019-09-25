@@ -15,17 +15,19 @@ module.exports = robot => {
       Buffer.from(content.data.content, 'base64').toString()
     );
 
+    const { action, pull_request } = context.payload;
     const {
       additions,
       deletions,
       number: issue_number,
       labels: prLabels,
-    } = context.payload.pull_request;
+    } = pull_request;
 
     const existingLabels = new Set(prLabels.map(({ name }) => name));
 
     const { labelsToAdd, labelsToRemove } = determineLabels({
       config,
+      action,
       additions,
       deletions,
       existingLabels,

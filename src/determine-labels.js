@@ -1,4 +1,4 @@
-module.exports = ({ config, existingLabels, additions, deletions, logger }) => {
+module.exports = ({ config, action, existingLabels, additions, deletions, logger }) => {
   const log = logger || function () { console.log(...arguments); };
   const labelsToAdd = new Set();
   const labelsToRemove = new Set();
@@ -9,6 +9,10 @@ module.exports = ({ config, existingLabels, additions, deletions, logger }) => {
 
   // eslint-disable-next-line guard-for-in
   for (const label in config) {
+    if (config[label].actions && config[label].actions.indexOf(action) < 0) {
+      log('Skipping label ', label, ' as action ', action, ' does not match', config[label].actions);
+      continue;
+    }
     log('looking for size matches', label, config[label]);
     let passes = false;
     let rules = 'or' in config[label] ? config[label].or : [config[label]];
